@@ -6,6 +6,7 @@ import (
      "github.com/hpcloud/tail"
      "go_dev/LogCollectProject/common"
     "github.com/astaxie/beego/logs"
+    "sync"
 )
 
 var (
@@ -50,4 +51,41 @@ func SendDataToKafka(tails *tail.Tail) {
 
         logs.Debug("pid:%v offset:%v\n", pid, offset)
     }
+}
+
+func GetDataFromKafka() {
+    var wg sync.WaitGroup
+    consumer, err := sarama.NewConsumer([]string{appConfig.Kafka_addr}, nil)
+    if err != nil {
+        logs.Error("consumer connect error:", err)
+        return
+    }
+    logs.Debug("consumer connnect success...")
+    defer consumer.Close()
+
+    for {
+        partitions, err := consumer.Partitions(appConfig.Topic)
+        if err != nil {
+            logs.Error("get partitions failed, err:", err)
+            continue
+        }
+
+        for _, p := range partitions {
+            partitionConsumer, err := consumer.ConsumePartition(appConfig.Topic, p, sarama.OffsetOldest)
+            if err != nil {
+                logs.Error("partitionConsumer err:", err)
+                continue
+            }
+            wg.Add(1)
+            go func(){
+                for m := range partitionConsumer.Messages() {
+                    logs.Debug("key: %s, text: %s, offset: %d\n", string(m.Key), string(m.Value), m.Offset)
+                }
+                wg.Done()
+            }()
+        }
+        wg.Wait()
+    }
+    
+    logs.Debug("Consumer success.")
 }

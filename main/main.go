@@ -37,5 +37,6 @@ func main() {
     }
     logs.Debug("init kafka success")
 
-    SendDataToKafka(tails)
+    go SendDataToKafka(tails)
+    GetDataFromKafka()
 }
