@@ -3,15 +3,16 @@ package model
 import (
 	"context"
 	"encoding/json"
-	"go_dev/day11/logagent/tailf"
+	
+	"MyGitHubProject/logCollectProject/logagent/tailf"
 	"time"
 
 	"github.com/astaxie/beego/logs"
-	etcdclient "github.com/coreos/etcd/clientv3"
+	etcd_client "go.etcd.io/etcd/clientv3"
 )
 
 var (
-	etcdClient *etcdclient.Client
+	etcdClient *etcd_client.Client
 )
 
 type LogInfo struct {
@@ -24,7 +25,7 @@ type LogInfo struct {
 	Topic      string `db:"topic"`
 }
 
-func InitEtcd(client *etcdclient.Client) {
+func InitEtcd(client *etcd_client.Client) {
 	etcdClient = client
 }
 

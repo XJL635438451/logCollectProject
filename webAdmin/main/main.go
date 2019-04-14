@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"go_dev/day13/web_admin/model"
-	_ "go_dev/day13/web_admin/router"
+	
+	"MyGitHubProject/logCollectProject/webAdmin/model"
+	_ "MyGitHubProject/logCollectProject/webAdmin/router"
 	"time"
+	"github.com/jmoiron/sqlx"
 
-	"go_dev/day13/logadmin/src/github.com/jmoiron/sqlx"
-
-	"github.com/coreos/etcd/clientv3"
+	etcd_client "go.etcd.io/etcd/clientv3"
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/astaxie/beego"
@@ -27,7 +27,7 @@ func initDb() (err error) {
 }
 
 func initEtcd() (err error) {
-	cli, err := clientv3.New(clientv3.Config{
+	cli, err := etcd_client.New(etcd_client.Config{
 		Endpoints:   []string{"localhost:2379", "localhost:22379", "localhost:32379"},
 		DialTimeout: 5 * time.Second,
 	})
@@ -41,7 +41,6 @@ func initEtcd() (err error) {
 }
 
 func main() {
-
 	err := initDb()
 	if err != nil {
 		logs.Warn("initDb failed, err:%v", err)

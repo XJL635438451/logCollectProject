@@ -2,7 +2,7 @@ package LogController
 
 import (
 	"fmt"
-	"go_dev/day13/web_admin/model"
+	"MyGitHubProject/logCollectProject/webAdmin/model"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"

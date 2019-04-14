@@ -24,6 +24,7 @@ func convertLogLevel(level string) int {
 }
 
 func initLogger(logPath string, logLevel string) (err error) {
+	logs.Debug("Start to init logger.")
 	config := make(map[string]interface{})
 	config["filename"] = logPath
 	config["level"] = convertLogLevel(logLevel)
@@ -35,5 +36,6 @@ func initLogger(logPath string, logLevel string) (err error) {
 	}
 
 	logs.SetLogger(logs.AdapterFile, string(configStr))
+	logs.Debug("Successful initialized logger.")
 	return
 }

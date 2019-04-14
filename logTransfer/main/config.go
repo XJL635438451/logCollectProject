@@ -20,6 +20,7 @@ var (
 )
 
 func initConfig(confType string, filename string) (err error) {
+	fmt.Println("Start to init config.")
 	conf, err := config.NewConfig(confType, filename)
 	if err != nil {
 		err = fmt.Errorf("New config failed, err: %v", err)
@@ -57,6 +58,6 @@ func initConfig(confType string, filename string) (err error) {
 		return
 	}
 
-	fmt.Println("Init config success, logConfig: %v", logConfig)
+	fmt.Printf("Successful initialized config, logConfig: %v\n", logConfig)
 	return
 }

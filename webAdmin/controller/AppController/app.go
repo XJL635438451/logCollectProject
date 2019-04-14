@@ -2,7 +2,7 @@ package AppController
 
 import (
 	"fmt"
-	"go_dev/day13/web_admin/model"
+	"MyGitHubProject/logCollectProject/webAdmin/model"
 
 	"strings"
 
@@ -15,7 +15,6 @@ type AppController struct {
 }
 
 func (p *AppController) AppList() {
-
 	logs.Debug("enter index controller")
 
 	p.Layout = "layout/layout.html"

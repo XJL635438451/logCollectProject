@@ -1,9 +1,8 @@
 package router
 
 import (
-	"go_dev/day13/web_admin/controller/AppController"
-	"go_dev/day13/web_admin/controller/LogController"
-
+	"MyGitHubProject/logCollectProject/webAdmin/controller/AppController"
+	"MyGitHubProject/logCollectProject/webAdmin/controller/LogController"
 	"github.com/astaxie/beego"
 )
 
@@ -17,5 +16,4 @@ func init() {
 	beego.Router("/log/apply", &LogController.LogController{}, "*:LogApply")
 	beego.Router("/log/list", &LogController.LogController{}, "*:LogList")
 	beego.Router("/log/create", &LogController.LogController{}, "*:LogCreate")
-
 }

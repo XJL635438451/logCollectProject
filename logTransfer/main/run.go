@@ -6,6 +6,8 @@ import (
 )
 
 func run() (err error) {
+	logs.Debug("Start to run...")
+	// Partitions returns the sorted list of all partition IDs for the given topic.
 	partitionList, err := kafkaClient.client.Partitions(kafkaClient.topic)
 	if err != nil {
 		logs.Error("Failed to get the list of partitions: ", err)
@@ -25,7 +27,6 @@ func run() (err error) {
 			kafkaClient.wg.Add(1)
 			for msg := range pc.Messages() {
 				logs.Debug("Partition:%d, Offset:%d, Key:%s, Value:%s", msg.Partition, msg.Offset, string(msg.Key), string(msg.Value))
-				//fmt.Println()
 				err = sendToES(kafkaClient.topic, msg.Value)
 				if err != nil {
 					logs.Warn("Send to es failed, topic:%v, value:%v, err:%v", kafkaClient.topic, msg.Value, err)

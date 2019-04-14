@@ -25,6 +25,7 @@ var (
 //1. 如果etcd中有etcdKey则取出对应的value，程序结束会返回
 //2. 没有该etcdKey则watch
 func initEtcd() (collectConf []tailf.CollectConf, err error) {
+	logs.Debug("Start to init etcd.")
 	cli, err := etcd_client.New(etcd_client.Config{
 		Endpoints:   []string{appConfig.etcdAddr},
 		DialTimeout: time.Duration(appConfig.etcdDailTimeout) * time.Second,
@@ -39,7 +40,7 @@ func initEtcd() (collectConf []tailf.CollectConf, err error) {
 	}
     var key string = appConfig.etcdKey
 	if strings.HasSuffix(key, "/") == false {
-		key = appConfig.etcdKey + "/"
+		key = key + "/"
 	}
     //localIPArray只有当前机器的ip
 	for _, ip := range localIPArray {
@@ -63,15 +64,16 @@ func initEtcd() (collectConf []tailf.CollectConf, err error) {
                 // {"path":"D:/project/nginx/logs/error2.log","topic":"nginx_log_err"}]
 				err = json.Unmarshal(v.Value, &collectConf)
 				if err != nil {
-					logs.Error("unmarshal failed, Error: %v", err)
+					logs.Error("Unmarshal failed, value: %v, Error: %v", v.Value, err)
 					continue
 				}
-				logs.Info("Log collect config is %v", collectConf)
+				logs.Debug("Log collect config is %v", collectConf)
 			}
 		}
 	}
 
 	initEtcdWatcher()
+	logs.Debug("Successfully initialized etcd.")
 	return
 }
 
@@ -119,6 +121,5 @@ func watchKey(key string) {
 				}
 			}
 		}
-
 	}
 }

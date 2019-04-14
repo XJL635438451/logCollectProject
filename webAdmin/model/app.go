@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/astaxie/beego/logs"
-	"go_dev/day13/logadmin/src/github.com/jmoiron/sqlx"
+	"github.com/jmoiron/sqlx"
 )
 
 type AppInfo struct {

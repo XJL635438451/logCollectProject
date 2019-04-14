@@ -25,8 +25,9 @@ type Config struct {
 	etcdDailTimeout int
 }
 
-//init colect object config, add collect object by etcd
+//Init colect object config, add collect object by etcd
 func loadCollectConf(conf config.Configer) (err error) {
+    fmt.Println("Start to load collect config.")
 	var cc tailf.CollectConf
 	cc.LogPath = conf.String("collect::log_path")
 	if len(cc.LogPath) == 0 {
@@ -41,11 +42,13 @@ func loadCollectConf(conf config.Configer) (err error) {
 	}
 	
 	appConfig.collectConf = append(appConfig.collectConf, cc)
+	fmt.Printf("Successfully loaded collect config.")
 	return
 }
 
 //init logs config
 func initLogsConf(conf config.Configer) (err error) {
+	fmt.Println("Start to load logs config.")
 	appConfig.logLevel = conf.String("logs::log_level")
 	if len(appConfig.logLevel) == 0 {
 		err = errors.New("Lnvalid logs::log_level.")
@@ -63,21 +66,25 @@ func initLogsConf(conf config.Configer) (err error) {
 		err = fmt.Errorf("Lnvalid collect::chan_size. Error: %v", err)
         return
 	}
+	fmt.Printf("Successfully loaded logs config.")
 	return
 }
 
 //init kafka config
 func initKafkaConf(conf config.Configer) (err error) {
+	fmt.Println("Start to load kafka config.")
 	appConfig.kafkaAddr = conf.String("kafka::server_addr")
 	if len(appConfig.kafkaAddr) == 0 {
 		err = errors.New("Lnvalid kafka::server_addr.")
 		return
 	}
+	fmt.Printf("Successfully loaded kafka config.")
     return
 }
 
 //init etcd config
 func initEtcdConf(conf config.Configer) (err error) {
+	fmt.Println("Start to load etcd config.")
 	appConfig.etcdAddr = conf.String("etcd::addr")
 	if len(appConfig.etcdAddr) == 0 {
 		err = errors.New("Lnvalid etcd::addr.")
@@ -95,10 +102,12 @@ func initEtcdConf(conf config.Configer) (err error) {
 		err = fmt.Errorf("Lnvalid etcd::etcdDailTimeout. Error: %v", err)
 		return
 	}
+	fmt.Printf("Successfully loaded etcd config.")
 	return
 }
 
 func loadConf(confType, filename string) (err error) {
+	fmt.Println("Start to load all config.")
 	conf, err := config.NewConfig(confType, filename)
 	if err != nil {
 		err = fmt.Errorf("New config failed, Error: %v", err)
@@ -107,16 +116,19 @@ func loadConf(confType, filename string) (err error) {
 
 	err = initLogsConf(conf)
 	if err != nil {
+		err = fmt.Errorf("Failed to init logs config. Error: %v", err)
 		return
 	}
 
 	err = initKafkaConf(conf)
 	if err != nil {
+		err = fmt.Errorf("Failed to init kafka config. Error: %v", err)
 		return
 	}
 	
 	err = initEtcdConf(conf)
 	if err != nil {
+		err = fmt.Errorf("Failed to init etcd config. Error: %v", err)
 		return
 	}
 	
@@ -125,5 +137,6 @@ func loadConf(confType, filename string) (err error) {
 		err = fmt.Errorf("Load collect conf failed, Error: %v", err)
 		return
 	}
+	fmt.Printf("Successfully loaded all config, Config: %v\n", appConfig)
 	return
 }

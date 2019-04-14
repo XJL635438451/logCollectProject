@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	elastic "gopkg.in/olivere/elastic.v2"
+	"github.com/astaxie/beego/logs"
 )
 
 type LogMessage struct {
@@ -17,12 +18,14 @@ var (
 )
 
 func initES(addr string) (err error) {
+    logs.Debug("Start to init es.")
 	client, err := elastic.NewClient(elastic.SetSniff(false), elastic.SetURL(addr))
 	if err != nil {
 		fmt.Println("connect es error", err)
 		return
 	}
 	esClient = client
+    logs.Debug("Successful initialized es.")
 	return
 }
 

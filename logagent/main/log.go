@@ -25,16 +25,18 @@ func convertLogLevel(level string) int {
 
 
 func initLogger() (err error) {
+	fmt.Println("Start to initialize logger.")
 	config := make(map[string]interface{})
 	config["filename"] = appConfig.logPath
 	config["level"] = convertLogLevel(appConfig.logLevel)
 
 	configStr, err := json.Marshal(config)
 	if err != nil {
-		err = fmt.Errorf("InitLogger failed, marshal err: %v", err)
+		err = fmt.Errorf("Init Logger failed, marshal err: %v", err)
 		return
 	}
 
 	logs.SetLogger(logs.AdapterFile, string(configStr))
+	logs.Debug("Successfully initialized logger.")
 	return
 }

@@ -100,6 +100,7 @@ func UpdateConfig(confs []CollectConf) (err error) {
 }
 
 func createNewTask(conf CollectConf) {
+	logs.Debug("Start to create new task.")
 	obj := &TailObj{
 		conf:     conf,
 		exitChan: make(chan int, 1),
@@ -120,11 +121,12 @@ func createNewTask(conf CollectConf) {
 
 	obj.tail = tails
 	tailObjMgr.tailObjs = append(tailObjMgr.tailObjs, obj)
-
+	logs.Debug("Successfully created new task and start to goroutine read from tail task..")
 	go readFromTail(obj)
 }
 
 func InitTail(conf []CollectConf, chanSize int) (err error) {
+	logs.Debug("Start to init tail.")
 	tailObjMgr = &TailObjMgr{
 		msgChan: make(chan *TextMsg, chanSize),
 	}
@@ -137,7 +139,7 @@ func InitTail(conf []CollectConf, chanSize int) (err error) {
 	for _, v := range conf {
 		createNewTask(v)
 	}
-
+    logs.Debug("Successfully initialized tail.")
 	return
 }
 
@@ -157,7 +159,7 @@ func readFromTail(tailObj *TailObj) {
             
 			tailObjMgr.msgChan <- textMsg
 		case <-tailObj.exitChan:
-			logs.Warn("Tail obj will exited, Conf:%v", tailObj.conf)
+			logs.Warn("Tail obj will exited, Conf: %v", tailObj.conf)
 			return
 		}
 	}
